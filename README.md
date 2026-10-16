@@ -1,6 +1,6 @@
-# onbrd
+# onboard
 
-Onboard keeps the original Qomo interface and adds a context-aware X onboarding bot.
+Onboard keeps the original Onboard interface and adds a context-aware X onboarding bot.
 
 ## Bot
 

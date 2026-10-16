@@ -19,8 +19,8 @@ loadEnvFile(path.join(process.cwd(), '.env.bot.local'));
 loadEnvFile(path.join(process.cwd(), '.env'));
 
 const BOT_HANDLE = (process.env.BOT_HANDLE || 'useonboardapp').replace(/^@/, '');
-const STATE_PATH = process.env.BOT_STATE_PATH || path.join(process.cwd(), 'data', 'onbrd-bot-state.json');
-const LOCK_PATH = process.env.BOT_LOCK_PATH || path.join(process.cwd(), 'data', 'onbrd-bot.lock');
+const STATE_PATH = process.env.BOT_STATE_PATH || path.join(process.cwd(), 'data', 'onboard-bot-state.json');
+const LOCK_PATH = process.env.BOT_LOCK_PATH || path.join(process.cwd(), 'data', 'onboard-bot.lock');
 const DRY_RUN = process.env.DRY_RUN === '1' || process.argv.includes('--dry-run');
 const LOOP = process.env.LOOP === '1' || process.argv.includes('--loop');
 const POLL_MS = Number(process.env.POLL_MS || 10000);
@@ -28,12 +28,12 @@ const MAX_RESULTS = Number(process.env.DEX_MAX_RESULTS || 5);
 const MARKET_TIMEOUT_MS = Number(process.env.MARKET_TIMEOUT_MS || 1400);
 const LLM_TIMEOUT_MS = Number(process.env.LLM_TIMEOUT_MS || 5000);
 const CACHE_TTL_MS = Number(process.env.CACHE_TTL_MS || 90_000);
-const CACHE_PATH = process.env.CACHE_PATH || path.join(process.cwd(), 'data', 'onbrd-context-cache.json');
+const CACHE_PATH = process.env.CACHE_PATH || path.join(process.cwd(), 'data', 'onboard-context-cache.json');
 const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || 'openai/gpt-4o-mini';
 const REFERRAL_BASE_URL = process.env.REFERRAL_BASE_URL || 'https://onboard.lol/signup?ref={username}';
 const QR_BASE_URL = process.env.QR_BASE_URL || 'https://quickchart.io/qr?size=320&text=';
 const FOMO_URL = process.env.FOMO_URL || 'https://fomo.family';
-const SUPPORT_URL = process.env.SUPPORT_URL || 'https://qomo.lol';
+const SUPPORT_URL = process.env.SUPPORT_URL || 'https://onboard.lol';
 const FOMO_LINK_CHANCE = Number(process.env.FOMO_LINK_CHANCE || 0.3);
 const SUPPORT_LINK_CHANCE = Number(process.env.SUPPORT_LINK_CHANCE || 0.25);
 
@@ -116,7 +116,7 @@ async function acquireLock() {
         return acquireLock();
       }
     }
-    console.error(`another Qomo bot instance is already running; lock=${LOCK_PATH}`);
+    console.error(`another Onboard bot instance is already running; lock=${LOCK_PATH}`);
     process.exit(0);
   }
 }
@@ -363,7 +363,7 @@ function riskFlags(pair) {
   return flags.slice(0, 3).join(', ') || 'verify official links';
 }
 
-function qomoOpinion(pair, score) {
+function onboardOpinion(pair, score) {
   const mc = Number(pair?.marketCap ?? pair?.fdv ?? 0);
   const vol = Number(pair?.volume?.h24 || 0);
   const h1 = Number(pair?.priceChange?.h1 ?? pair?.priceChange?.h24 ?? 0);
@@ -557,8 +557,8 @@ Source: ${cleaned}`;
     headers: {
       Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
       'Content-Type': 'application/json',
-      'HTTP-Referer': process.env.SITE_URL || 'https://qomo.ai',
-      'X-Title': 'Qomo',
+      'HTTP-Referer': process.env.SITE_URL || 'https://onboard.ai',
+      'X-Title': 'Onboard',
     },
     body: JSON.stringify({ model: OPENROUTER_MODEL, messages: [{ role: 'user', content: prompt }], temperature: 0.25, max_tokens: 70 }),
   }), Math.min(LLM_TIMEOUT_MS, 4500), null);
@@ -617,7 +617,7 @@ function headlineContext(sourceText) {
 function contextPhrase(sourceText, pair, queries) {
   const symbol = String(pair?.baseToken?.symbol || '').replace(/^\$+/, '').toLowerCase();
   const nameParts = String(pair?.baseToken?.name || '').toLowerCase().split(/\s+/);
-  const stop = new Set(['the', 'and', 'for', 'this', 'that', 'with', 'coin', 'token', 'what', 'where', 'chart', 'ticker', 'qomo', BOT_HANDLE.toLowerCase(), symbol, ...nameParts]);
+  const stop = new Set(['the', 'and', 'for', 'this', 'that', 'with', 'coin', 'token', 'what', 'where', 'chart', 'ticker', 'onboard', BOT_HANDLE.toLowerCase(), symbol, ...nameParts]);
   const quoted = [...String(sourceText || '').matchAll(/["“”']([^"“”']{3,54})["“”']/g)].map((match) => match[1].trim())[0];
   if (quoted) return quoted.slice(0, 58);
   const words = String(sourceText || '')
@@ -657,7 +657,7 @@ async function deterministicReply({ author, queries, ranked, sourceText }) {
   const name = author?.username ? `@${author.username}` : 'scan';
   if (!ranked.length) {
     const searched = [...queries.cas.map(() => 'posted address'), ...queries.tickers.map((t) => `$${t}`), ...queries.phrases].filter(Boolean).slice(0, 4).join(', ') || 'the post';
-    return `${name} qomo scan\n\nMatch: none found\nContext: no strong live FOMO market match for ${searched}\nRisk: could be unlaunched, misspelled, too new, or using a different ticker\n\nQomo take: verify official links before buying.`;
+    return `${name} onboard scan\n\nMatch: none found\nContext: no strong live FOMO market match for ${searched}\nRisk: could be unlaunched, misspelled, too new, or using a different ticker\n\nOnboard take: verify official links before buying.`;
   }
 
   const top = ranked[0];
@@ -671,11 +671,11 @@ async function deterministicReply({ author, queries, ranked, sourceText }) {
   const extras = ranked.slice(1, 4).map((item) => item.pair?.baseToken?.symbol ? `${item.pair.baseToken.symbol} ${usdShort(item.pair.marketCap ?? item.pair.fdv)}` : '').filter(Boolean);
 
   const narrative = await llmNarrativeSummary(sourceText, pair) || narrativeLine(pair, queries, sourceText);
-  const opinion = qomoOpinion(pair, top.score);
+  const opinion = onboardOpinion(pair, top.score);
   const searchTarget = symbol.replace(/^\$/, '');
   const searchLine = Math.random() < FOMO_LINK_CHANCE ? `Search ${searchTarget} on ${FOMO_URL}` : `Search ${searchTarget} on FOMO`;
-  const supportLine = Math.random() < SUPPORT_LINK_CHANCE ? `\n\nSupport Qomo: ${SUPPORT_URL}` : '';
-  return `${name} qomo scan\n\nMatch: ${symbol}\nContext: ${narrative}\nFOMO: MC ${usdShort(mc)} | vol24 ${usdShort(vol)}${txLine}\nAge: ${ageShort(pair)} | confidence: ${confidence(top.score)}\nRisk: ${riskFlags(pair)}\n\nQomo take: ${opinion}\n${searchLine}${extras.length ? `\n\nOther matches: ${extras.join(', ')}` : ''}${supportLine}`;
+  const supportLine = Math.random() < SUPPORT_LINK_CHANCE ? `\n\nSupport Onboard: ${SUPPORT_URL}` : '';
+  return `${name} onboard scan\n\nMatch: ${symbol}\nContext: ${narrative}\nFOMO: MC ${usdShort(mc)} | vol24 ${usdShort(vol)}${txLine}\nAge: ${ageShort(pair)} | confidence: ${confidence(top.score)}\nRisk: ${riskFlags(pair)}\n\nOnboard take: ${opinion}\n${searchLine}${extras.length ? `\n\nOther matches: ${extras.join(', ')}` : ''}${supportLine}`;
 }
 
 function cleanReply(text) {
@@ -704,7 +704,7 @@ function friendlyClarifier({ author, mention }) {
   const name = author?.username ? `@${author.username}` : 'hey';
   const variants = [
     `${name} I can help, but I need a ticker or coin address to pull the FOMO read. Send one over and I will scan it.`,
-    `${name} drop me a ticker or coin address and I can get you the stats, context, flow, and Qomo take.`,
+    `${name} drop me a ticker or coin address and I can get you the stats, context, flow, and Onboard take.`,
     `${name} I am not seeing a clear ticker or coin address here. Reply with one and I will run the scan.`,
     `${name} give me a ticker or coin address and I will check the live FOMO context for you.`,
     `${name} I need one more clue. Send a ticker or coin address and I can pull the market read.`,
@@ -719,13 +719,13 @@ async function llmPolish(context) {
   const prompt = `Rewrite this X bot reply to be compact, clean, useful, and trader-native.
 
 Hard rules:
-- Keep the same structure: Match, Context, FOMO, Age/confidence, Risk, Qomo take, Search, optional Support Qomo line.
+- Keep the same structure: Match, Context, FOMO, Age/confidence, Risk, Onboard take, Search, optional Support Onboard line.
 - Keep all numbers and the one-line context.
-- Qomo take must be a short opinion, not generic safety filler.
+- Onboard take must be a short opinion, not generic safety filler.
 - Do not include any contract address or shortened contract address.
 - Use at most one cashtag total in the entire post.
 - Never mention any backend data provider.
-- Say FOMO for the market platform. Keep the FOMO URL only if it is already present in the draft. Keep Support Qomo only if it is already present in the draft.
+- Say FOMO for the market platform. Keep the FOMO URL only if it is already present in the draft. Keep Support Onboard only if it is already present in the draft.
 - Plain text only. No hashtags. No emojis. No em dashes.
 - Max 760 characters.
 
@@ -735,8 +735,8 @@ Reply to rewrite:\n\n${base}`;
     headers: {
       Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
       'Content-Type': 'application/json',
-      'HTTP-Referer': process.env.SITE_URL || 'https://qomo.ai',
-      'X-Title': 'Qomo',
+      'HTTP-Referer': process.env.SITE_URL || 'https://onboard.ai',
+      'X-Title': 'Onboard',
     },
     body: JSON.stringify({ model: OPENROUTER_MODEL, messages: [{ role: 'user', content: prompt }], temperature: 0.35, max_tokens: 260 }),
   }), LLM_TIMEOUT_MS, null);
@@ -774,9 +774,9 @@ async function llmOnboarding({ author, target, mention, signup, qr }) {
   const profile = [author?.name, author?.username ? `@${author.username}` : '', author?.description].filter(Boolean).join(' | ').slice(0, 500);
   const fallback = fallbackOnboarding({ author, target, mention, signup, qr });
   if (!process.env.OPENROUTER_API_KEY) return fallback;
-  const prompt = `You are Onbrd, a warm X onboarding assistant. A user tagged you and needs a useful, personalized first reply, not a canned autoresponder.
+  const prompt = `You are Onboard, a warm X onboarding assistant. A user tagged you and needs a useful, personalized first reply, not a canned autoresponder.
 
-Use the original post, the user's request, and their profile to infer what they are trying to do. Acknowledge the actual topic in one short phrase, then give the clearest next steps for getting started on the Onbrd signup flow. If they seem advanced, keep it efficient. If they seem new, explain simply. Do not invent features or ask unnecessary questions.
+Use the original post, the user's request, and their profile to infer what they are trying to do. Acknowledge the actual topic in one short phrase, then give the clearest next steps for getting started on the Onboard signup flow. If they seem advanced, keep it efficient. If they seem new, explain simply. Do not invent features or ask unnecessary questions.
 
 Hard rules:
 - Return plain text only, one concise X reply, maximum 170 characters before the links.
@@ -796,7 +796,7 @@ Tag/request: ${request || 'help me get started'}`;
       Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
       'Content-Type': 'application/json',
       'HTTP-Referer': process.env.SITE_URL || 'https://onboard.lol',
-      'X-Title': 'Onbrd',
+      'X-Title': 'Onboard',
     },
     body: JSON.stringify({ model: OPENROUTER_MODEL, messages: [{ role: 'user', content: prompt }], temperature: 0.55, max_tokens: 120 }),
   }), LLM_TIMEOUT_MS, null);
@@ -826,11 +826,11 @@ async function handleMention(mention, includes) {
   const qr = qrUrl(signup);
   const text = await llmOnboarding({ author: finalAuthor, target, mention, signup, qr });
   if (DRY_RUN) {
-    console.log(`\n--- DRY RUN Onbrd reply to mention=${mention.id} target=${target?.id} ---\n${text}\n`);
+    console.log(`\n--- DRY RUN Onboard reply to mention=${mention.id} target=${target?.id} ---\n${text}\n`);
     return;
   }
   const posted = await xPost('https://api.x.com/2/tweets', { text, reply: { in_reply_to_tweet_id: mention.id } });
-  console.log(`${new Date().toISOString()} onbrd reply mention=${mention.id} target=${target?.id} tweet=${posted?.data?.id}`);
+  console.log(`${new Date().toISOString()} onboard reply mention=${mention.id} target=${target?.id} tweet=${posted?.data?.id}`);
 }
 async function runOnce() {
   const state = await readState();

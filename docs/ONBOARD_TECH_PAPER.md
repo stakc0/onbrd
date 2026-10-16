@@ -1,18 +1,18 @@
-# Qomo Technical Paper
+# Onboard Technical Paper
 
 ## Idea
 
-Qomo is an X-native coin context bot.
+Onboard is an X-native coin context bot.
 
-Tag `@askqomo` under a post, ticker, or contract discussion. Qomo quickly answers:
+Tag `@askonboard` under a post, ticker, or contract discussion. Onboard quickly answers:
 
 > What is this coin, why does it exist, and what does the live market look like?
 
 The product is built for fast public coin discovery. It reads the context around a coin, finds the strongest market match, and replies with a compact FOMO-native scan.
 
-## What Qomo Returns
+## What Onboard Returns
 
-A Qomo reply is designed to be short, useful, and easy to read on the timeline.
+A Onboard reply is designed to be short, useful, and easy to read on the timeline.
 
 It can include:
 
@@ -26,23 +26,23 @@ It can include:
 - risk flags
 - FOMO search instruction
 
-Qomo does not post contract addresses in public replies.
+Onboard does not post contract addresses in public replies.
 
 ## Core Flow
 
-1. A user tags `@askqomo` under an X post.
-2. Qomo reads the mention, parent tweet, and quoted tweet when available.
-3. Qomo extracts tickers, contract addresses, and relevant phrases.
-4. Qomo finds matching coins through live market indexing.
-5. Qomo ranks matches by relevance, volume, freshness, and ticker/name confidence.
-6. Qomo checks token social context when available.
-7. Qomo replies with one clean scan.
+1. A user tags `@askonboard` under an X post.
+2. Onboard reads the mention, parent tweet, and quoted tweet when available.
+3. Onboard extracts tickers, contract addresses, and relevant phrases.
+4. Onboard finds matching coins through live market indexing.
+5. Onboard ranks matches by relevance, volume, freshness, and ticker/name confidence.
+6. Onboard checks token social context when available.
+7. Onboard replies with one clean scan.
 
 ## Context Engine
 
 The context line is the key feature.
 
-Qomo should summarize the actual reason a coin exists, not just label it with a generic category.
+Onboard should summarize the actual reason a coin exists, not just label it with a generic category.
 
 Example:
 
@@ -66,7 +66,7 @@ Context sources:
 
 ## Market Matching
 
-Qomo supports:
+Onboard supports:
 
 - direct Solana contract lookup
 - ticker search
@@ -86,15 +86,15 @@ Ranking priorities:
 ## Reply Shape
 
 ```text
-@user qomo scan:
+@user onboard scan:
 
-Best match: $QOMO
+Best match: $ONBOARD
 Context: X-native coin context bot for fast FOMO scans
 MC $42K | vol24 $31K | buys/sells 120/98
 Age: 2h | confidence: high
 Risk flags: fresh launch, heavy pullback
 
-FOMO: search $QOMO
+FOMO: search $ONBOARD
 ```
 
 ## Public Rules
@@ -108,7 +108,7 @@ FOMO: search $QOMO
 
 ## Speed Design
 
-Qomo is optimized for quick replies.
+Onboard is optimized for quick replies.
 
 Implemented speed choices:
 
@@ -129,10 +129,10 @@ Default timing:
 
 Main files:
 
-- `scripts/qomo-bot.mjs`: X mention listener, market matching, context engine, reply writer
+- `scripts/onboard-bot.mjs`: X mention listener, market matching, context engine, reply writer
 - `src/App.tsx`: landing page and docs route
 - `src/index.css`: site styling
-- `docs/QOMO_TECH_PAPER.md`: this public technical paper
+- `docs/ONBOARD_TECH_PAPER.md`: this public technical paper
 
 ## Deployment
 
@@ -151,7 +151,7 @@ npm run bot:loop
 Recommended env:
 
 ```env
-BOT_HANDLE=askqomo
+BOT_HANDLE=askonboard
 POLL_MS=15000
 MARKET_TIMEOUT_MS=1400
 LLM_TIMEOUT_MS=1800
@@ -161,7 +161,7 @@ FOMO_URL=https://fomo.family
 
 ## North Star
 
-Qomo should feel like the fastest way to ask:
+Onboard should feel like the fastest way to ask:
 
 ```text
 what is this coin and why does it exist?

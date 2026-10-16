@@ -9,10 +9,10 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.app.json",
-    "bot": "LOOP=0 node scripts/onbrd-bot.mjs",
-    "bot:dry-run": "LOOP=0 DRY_RUN=1 node scripts/onbrd-bot.mjs",
-    "bot:loop": "LOOP=1 node scripts/onbrd-bot.mjs",
-    "bot:loop:dry-run": "LOOP=1 DRY_RUN=1 node scripts/onbrd-bot.mjs"
+    "bot": "LOOP=0 node scripts/onboard-bot.mjs",
+    "bot:dry-run": "LOOP=0 DRY_RUN=1 node scripts/onboard-bot.mjs",
+    "bot:loop": "LOOP=1 node scripts/onboard-bot.mjs",
+    "bot:loop:dry-run": "LOOP=1 DRY_RUN=1 node scripts/onboard-bot.mjs"
   },
   "dependencies": {
     "@solana/web3.js": "^1.98.4",
