@@ -18,7 +18,7 @@ function loadEnvFile(file) {
 loadEnvFile(path.join(process.cwd(), '.env.bot.local'));
 loadEnvFile(path.join(process.cwd(), '.env'));
 
-const BOT_HANDLE = (process.env.BOT_HANDLE || 'onbrd').replace(/^@/, '');
+const BOT_HANDLE = (process.env.BOT_HANDLE || 'useonboardapp').replace(/^@/, '');
 const STATE_PATH = process.env.BOT_STATE_PATH || path.join(process.cwd(), 'data', 'onbrd-bot-state.json');
 const LOCK_PATH = process.env.BOT_LOCK_PATH || path.join(process.cwd(), 'data', 'onbrd-bot.lock');
 const DRY_RUN = process.env.DRY_RUN === '1' || process.argv.includes('--dry-run');
@@ -30,7 +30,7 @@ const LLM_TIMEOUT_MS = Number(process.env.LLM_TIMEOUT_MS || 5000);
 const CACHE_TTL_MS = Number(process.env.CACHE_TTL_MS || 90_000);
 const CACHE_PATH = process.env.CACHE_PATH || path.join(process.cwd(), 'data', 'onbrd-context-cache.json');
 const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || 'openai/gpt-4o-mini';
-const REFERRAL_BASE_URL = process.env.REFERRAL_BASE_URL || 'https://onbrd.lol/signup?ref={username}';
+const REFERRAL_BASE_URL = process.env.REFERRAL_BASE_URL || 'https://onboard.lol/signup?ref={username}';
 const QR_BASE_URL = process.env.QR_BASE_URL || 'https://quickchart.io/qr?size=320&text=';
 const FOMO_URL = process.env.FOMO_URL || 'https://fomo.family';
 const SUPPORT_URL = process.env.SUPPORT_URL || 'https://qomo.lol';
@@ -795,7 +795,7 @@ Tag/request: ${request || 'help me get started'}`;
     headers: {
       Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
       'Content-Type': 'application/json',
-      'HTTP-Referer': process.env.SITE_URL || 'https://onbrd.lol',
+      'HTTP-Referer': process.env.SITE_URL || 'https://onboard.lol',
       'X-Title': 'Onbrd',
     },
     body: JSON.stringify({ model: OPENROUTER_MODEL, messages: [{ role: 'user', content: prompt }], temperature: 0.55, max_tokens: 120 }),

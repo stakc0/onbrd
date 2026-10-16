@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import docsText from '../docs/QOMO_TECH_PAPER.md?raw';
 
 const BRAND = 'onboard';
-const X_HANDLE = '@onbrd';
-const X_URL = 'https://x.com/onbrd';
+const X_HANDLE = '@useonboardapp';
+const X_URL = 'https://x.com/useonboardapp';
 const CA = '5Ya5MEehcWSHMD8ptmKN33MMD4V5yJxm74pGMd6afomo';
 const REFRESH_MS = 30_000;
 const PUMP_JOIN_URL = 'https://pump.fun/join/x';
@@ -146,7 +146,11 @@ function HomePage() {
           </div>
         </div>
         <div className="onbrd-invite-media">
-          <img src="/pump-invite.png" alt="Pumpfun invited you to pump.fun" />
+          <div className="onbrd-invite-image"><img src="/pump-invite.png" alt="Pumpfun invited you to pump.fun" /></div>
+          <div className="onbrd-qr-row">
+            <img src="/onboard-qr.jpg" alt="Scan to join Onboard" />
+            <div><span>scan to start</span><b>your Onboard entry point</b><a href={PUMP_JOIN_URL} target="_blank" rel="noreferrer">open referral ↗</a></div>
+          </div>
         </div>
       </section>
 
