@@ -6,6 +6,7 @@ const X_HANDLE = '@onbrd';
 const X_URL = 'https://x.com/onbrd';
 const CA = '5Ya5MEehcWSHMD8ptmKN33MMD4V5yJxm74pGMd6afomo';
 const REFRESH_MS = 30_000;
+const PUMP_JOIN_URL = 'https://pump.fun/join/x';
 
 type DexPair = {
   marketCap?: number;
@@ -131,6 +132,21 @@ function HomePage() {
           <a href={X_URL} target="_blank" rel="noreferrer">open X</a>
           <a href="#tech">see tech</a>
           <a href="/docs">docs</a>
+        </div>
+      </section>
+
+      <section className="onbrd-invite" aria-label="get started">
+        <div className="onbrd-invite-copy">
+          <span>your way in</span>
+          <h2>Pumpfun invited you to pump.fun.</h2>
+          <p>Trade internet trends, then come back to Onbrd when you want a clearer starting point and a human-friendly next step.</p>
+          <div className="qomo-cta-row">
+            <a href={PUMP_JOIN_URL} target="_blank" rel="noreferrer">join with X</a>
+            <a href={PUMP_JOIN_URL} target="_blank" rel="noreferrer">sign up</a>
+          </div>
+        </div>
+        <div className="onbrd-invite-media">
+          <img src="/pump-invite.png" alt="Pumpfun invited you to pump.fun" />
         </div>
       </section>
 
