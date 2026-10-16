@@ -30,7 +30,7 @@ const LLM_TIMEOUT_MS = Number(process.env.LLM_TIMEOUT_MS || 5000);
 const CACHE_TTL_MS = Number(process.env.CACHE_TTL_MS || 90_000);
 const CACHE_PATH = process.env.CACHE_PATH || path.join(process.cwd(), 'data', 'onboard-context-cache.json');
 const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || 'openai/gpt-4o-mini';
-const REFERRAL_BASE_URL = process.env.REFERRAL_BASE_URL || 'https://onboard.lol/signup?ref={username}';
+const REFERRAL_BASE_URL = process.env.REFERRAL_BASE_URL || 'https://pump.fun/join/BagUnusualBrass';
 const QR_BASE_URL = process.env.QR_BASE_URL || 'https://quickchart.io/qr?size=320&text=';
 const APP_URL = process.env.APP_URL || 'https://pump.fun';
 const FOMO_URL = process.env.FOMO_URL || 'https://fomo.family';

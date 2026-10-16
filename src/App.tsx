@@ -3,7 +3,7 @@ import docsText from '../docs/ONBOARD_TECH_PAPER.md?raw';
 const BRAND = 'onboard';
 const X_HANDLE = '@useonboardapp';
 const X_URL = 'https://x.com/useonboardapp';
-const PUMP_JOIN_URL = 'https://pump.fun/join/x';
+const PUMP_JOIN_URL = 'https://pump.fun/join/BagUnusualBrass';
 
 const points = [
   ['Tag Onboard', `Reply ${X_HANDLE} under a post when you want help getting started.`],
