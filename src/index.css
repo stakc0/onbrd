@@ -51,6 +51,8 @@ button { font: inherit; }
 }
 
 
+.qomo-brand img { width: 30px; height: 30px; object-fit: contain; }
+
 .qomo-actions,
 .qomo-cta-row {
   display: flex;
