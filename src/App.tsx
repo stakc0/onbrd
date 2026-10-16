@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import docsText from '../docs/QOMO_TECH_PAPER.md?raw';
 
-const BRAND = 'onbrd';
+const BRAND = 'onboard';
 const X_HANDLE = '@onbrd';
 const X_URL = 'https://x.com/onbrd';
 const CA = '5Ya5MEehcWSHMD8ptmKN33MMD4V5yJxm74pGMd6afomo';
@@ -63,7 +63,7 @@ async function loadDexPair(): Promise<DexPair | null> {
 
 const points = [
   ['Tag qomo', `Reply ${X_HANDLE} under any post with a ticker, CA, meme, or coin question.`],
-  ['It gets the context', 'Onbrd reads the post, linked coin socials, and quoted tweet context to understand the narrative.'],
+  ['It gets the context', 'Onboard reads the post, linked coin socials, and quoted tweet context to understand the narrative.'],
   ['It checks FOMO', 'Market cap, volume, age, flow, confidence, and risk flags in one fast scan.'],
   ['It replies clean', 'No public CAs, no backend names, just the reason the coin exists and the live market read.'],
 ] as const;
@@ -124,9 +124,9 @@ function HomePage() {
       </header>
 
       <section id="top" className="qomo-hero">
-        <h1>ask onbrd.</h1>
+        <h1>ask onboard.</h1>
         <p>
-          Tag {X_HANDLE} under any X post. Onbrd reads the context, detects tickers and CAs, fetches live FOMO market data, and replies with the cleanest coin scan.
+          Tag {X_HANDLE} under any X post. Onboard reads the context, detects tickers and CAs, fetches live FOMO market data, and replies with the cleanest coin scan.
         </p>
         <div className="qomo-cta-row">
           <a href={X_URL} target="_blank" rel="noreferrer">open X</a>
@@ -139,7 +139,7 @@ function HomePage() {
         <div className="onbrd-invite-copy">
           <span>your way in</span>
           <h2>Pumpfun invited you to pump.fun.</h2>
-          <p>Trade internet trends, then come back to Onbrd when you want a clearer starting point and a human-friendly next step.</p>
+          <p>Trade internet trends, then come back to Onboard when you want a clearer starting point and a human-friendly next step.</p>
           <div className="qomo-cta-row">
             <a href={PUMP_JOIN_URL} target="_blank" rel="noreferrer">join with X</a>
             <a href={PUMP_JOIN_URL} target="_blank" rel="noreferrer">sign up</a>
@@ -230,8 +230,8 @@ function DocsPage() {
 
       <section className="qomo-docs-hero">
         <span>technical paper</span>
-        <h1>onbrd docs.</h1>
-        <p>The on-site technical paper for how Onbrd reads X context, resolves coins, and returns fast FOMO-native scans.</p>
+        <h1>onboard docs.</h1>
+        <p>The on-site technical paper for how Onboard reads X context, resolves coins, and returns fast FOMO-native scans.</p>
       </section>
 
       <MarkdownDoc text={docsText} />
