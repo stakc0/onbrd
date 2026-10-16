@@ -846,14 +846,7 @@ async function runOnce() {
     return;
   }
 
-  if (!state.initialized && !state.newestId) {
-    state.seen.push(...mentions.map((mention) => mention.id));
-    state.newestId = mentions.reduce((max, mention) => !max || BigInt(mention.id) > BigInt(max) ? mention.id : max, state.newestId);
-    state.initialized = true;
-    await writeState(state);
-    console.log(`${new Date().toISOString()} initialized @${BOT_HANDLE}; skipped backlog=${mentions.length}`);
-    return;
-  }
+  // Process the first observed mention too. Skipping the initial batch makes a fresh bot silently miss its first real tag.
   state.initialized = true;
 
   for (const mention of mentions) {
