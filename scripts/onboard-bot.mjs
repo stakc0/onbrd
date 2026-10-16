@@ -32,6 +32,7 @@ const CACHE_PATH = process.env.CACHE_PATH || path.join(process.cwd(), 'data', 'o
 const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || 'openai/gpt-4o-mini';
 const REFERRAL_BASE_URL = process.env.REFERRAL_BASE_URL || 'https://onboard.lol/signup?ref={username}';
 const QR_BASE_URL = process.env.QR_BASE_URL || 'https://quickchart.io/qr?size=320&text=';
+const APP_URL = process.env.APP_URL || 'https://pump.fun';
 const FOMO_URL = process.env.FOMO_URL || 'https://fomo.family';
 const SUPPORT_URL = process.env.SUPPORT_URL || 'https://onboard.lol';
 const FOMO_LINK_CHANCE = Number(process.env.FOMO_LINK_CHANCE || 0.3);
@@ -757,7 +758,7 @@ function qrUrl(url) {
 }
 
 function composeReply(intro, signup, qr) {
-  const suffix = ` Signup: ${signup} QR: ${qr}`;
+  const suffix = ` Signup: ${signup} QR: ${qr} App: ${APP_URL}`;
   const room = Math.max(20, 280 - suffix.length);
   return `${String(intro || '').trim().slice(0, room)}${suffix}`;
 }
@@ -765,7 +766,7 @@ function composeReply(intro, signup, qr) {
 function fallbackOnboarding({ author, target, mention, signup, qr }) {
   const name = author?.username ? `@${author.username}` : '@there';
   const subject = String(target?.text || mention?.text || '').replace(/\s+/g, ' ').trim().slice(0, 70);
-  return composeReply(`${name} I read your post${subject ? ` about ${subject}` : ''}. Start here: open the link, create an account, verify your email, then finish your profile.`, signup, qr);
+  return composeReply(`${name} I read your post${subject ? ` about ${subject}` : ''}. Start here: open the link, create an account, then download the official app from the app store and sign in with the same account.`, signup, qr);
 }
 
 async function llmOnboarding({ author, target, mention, signup, qr }) {
@@ -779,12 +780,14 @@ async function llmOnboarding({ author, target, mention, signup, qr }) {
 Use the original post, the user's request, and their profile to infer what they are trying to do. Acknowledge the actual topic in one short phrase, then give the clearest next steps for getting started on the Onboard signup flow. If they seem advanced, keep it efficient. If they seem new, explain simply. Do not invent features or ask unnecessary questions.
 
 Hard rules:
-- Return plain text only, one concise X reply, maximum 170 characters before the links.
+- Return plain text only, one concise X reply, maximum 120 characters before the links.
 - No hashtags, emojis, markdown, hype, promises, or financial advice.
-- Mention the signup link exactly once and the QR link exactly once.
+- Mention the signup link, QR link, and app link exactly once.
 - Keep these exact links unchanged:
 Signup: ${signup}
 QR: ${qr}
+App: ${APP_URL}
+- If the user is new, say to download the official app from the app store and sign in with the same account.
 - Do not mention being an AI, prompts, or backend systems.
 
 User profile: ${profile || 'unknown'}
@@ -807,6 +810,7 @@ Tag/request: ${request || 'help me get started'}`;
     const text = cleanReply(json.choices?.[0]?.message?.content || '')
       .replace(/Signup:\s*\S+/ig, '')
       .replace(/QR:\s*\S+/ig, '')
+      .replace(/App:\s*\S+/ig, '')
       .trim()
       .slice(0, 170);
     return composeReply(text || fallback.split(' Signup:')[0], signup, qr);
